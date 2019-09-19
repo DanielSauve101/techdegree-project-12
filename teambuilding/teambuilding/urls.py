@@ -17,11 +17,14 @@ from django.contrib import admin
 from django.urls import include, path
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
+from .views import Home
+
 urlpatterns = [
+    path('', Home.as_view(), name='home'),
     path('admin/', admin.site.urls),
-    path('accounts/', include('accounts.urls', namespace='accounts')),
-    path('projects/', include('projects.urls', namespace='projects')),
-    path('applications/', include('applications.urls', namespace='applications')),
+    path('accounts/', include("accounts.urls")),
+    path('projects/', include('projects.urls')),
+    path('applications/', include('applications.urls')),
 ]
 
 urlpatterns += staticfiles_urlpatterns()
