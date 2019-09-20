@@ -53,10 +53,10 @@
           <nav>
             <ul class="circle--inline">
             {% if user.is_authenticated %}
-              <li><a href="{% url 'accounts:signout' %}">Sign Out</a></li>
+              <li><a href="{% url 'accounts:logout' %}">Log Out</a></li>
             {% else %}
               <li><a href="{% url 'accounts:signup' %}">Sign Up</a></li>
-              <li><a href="{% url 'accounts:signin' %}">Sign In</a></li>
+              <li><a href="{% url 'accounts:login' %}">Log In</a></li>
             {% endif %}
             </ul>
           </nav>

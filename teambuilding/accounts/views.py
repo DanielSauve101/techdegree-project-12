@@ -14,16 +14,17 @@ class SignUp(CreateView):
 
     def form_valid(self, form):
         valid = super(SignUp, self).form_valid(form)
-        email, password = form.cleaned_data.get('email'), form.cleaned_data.get('password1')
+        email = form.cleaned_data.get('email')
+        password = form.cleaned_data.get('password1')
         new_user = authenticate(email=email, password=password)
         login(self.request, new_user)
         return valid
 
 
-class SignInView(FormView):
+class LogInView(FormView):
     form_class = AuthenticationForm
     success_url = reverse_lazy('home')
-    template_name = "accounts/signin.html"
+    template_name = "accounts/login.html"
 
     def get_form(self, form_class=None):
         if form_class is None:
@@ -35,7 +36,7 @@ class SignInView(FormView):
         return super().form_valid(form)
 
 
-class SignOutView(RedirectView):
+class LogOutView(RedirectView):
     url = reverse_lazy('home')
 
     def get(self, request, *args, **kwargs):
