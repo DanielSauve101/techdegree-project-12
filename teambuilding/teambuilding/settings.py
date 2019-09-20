@@ -122,3 +122,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'assets')]
+
+AUTH_USER_MODEL = 'accounts.User'
