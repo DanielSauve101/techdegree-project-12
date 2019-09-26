@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.conf import settings
 from django.db import models
 
 
@@ -45,4 +46,22 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
-    
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=60)
+    description = models.TextField()
+    profile_picture = models.ImageField(upload_to="profile_picture", default='frank_profile.jpg')
+
+    def __str__(self):
+        return self.name
+
+
+class Skill(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    skills = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.skills
+

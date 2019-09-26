@@ -1,6 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
+from django.forms import inlineformset_factory
+
+from .models import Profile, Skill
 
 
 class UserCreateForm(UserCreationForm):
@@ -24,3 +27,30 @@ class UserCreateForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = [
+            'name',
+            'description',
+            'profile_picture'
+        ]
+
+
+class SkillForm(forms.ModelForm):
+    class Meta:
+        model = Skill
+        fields = [
+            'skills'
+        ]
+
+SkillInlineFormSet = inlineformset_factory(
+    Profile, 
+    Skill,
+    extra=0,
+    fields=('skills',),
+    form=SkillForm,
+    min_num=1
+    )
