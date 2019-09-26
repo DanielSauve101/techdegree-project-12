@@ -14,13 +14,13 @@ from .models import Profile
 
 class SignUp(CreateView):
     form_class = UserCreateForm
-    success_url = reverse_lazy('accounts:profile-form')
+    success_url = reverse_lazy("accounts:profile-form")
     template_name = "accounts/signup.html"
 
     def form_valid(self, form):
         valid = super(SignUp, self).form_valid(form)
-        email = form.cleaned_data.get('email')
-        password = form.cleaned_data.get('password1')
+        email = form.cleaned_data.get("email")
+        password = form.cleaned_data.get("password1")
         new_user = authenticate(email=email, password=password)
         login(self.request, new_user)
         return valid
@@ -28,7 +28,7 @@ class SignUp(CreateView):
 
 class LogInView(FormView):
     form_class = AuthenticationForm
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy("home")
     template_name = "accounts/login.html"
 
     def get_form(self, form_class=None):
@@ -42,7 +42,7 @@ class LogInView(FormView):
 
 
 class LogOutView(RedirectView):
-    url = reverse_lazy('home')
+    url = reverse_lazy("home")
 
     def get(self, request, *args, **kwargs):
         logout(request)
@@ -51,21 +51,20 @@ class LogOutView(RedirectView):
 
 class CreateProfileView(LoginRequiredMixin, CreateView):
     form_class = ProfileForm
-    success_url = reverse_lazy('home')
     template_name = "accounts/profile_form.html"
     model = Profile
 
     def get_context_data(self, **kwargs):
         data = super(CreateProfileView, self).get_context_data(**kwargs)
         if self.request.POST:
-            data['skills_formset'] = SkillInlineFormSet(self.request.POST)
+            data["skills_formset"] = SkillInlineFormSet(self.request.POST)
         else:
-            data['skills_formset'] = SkillInlineFormSet()
+            data["skills_formset"] = SkillInlineFormSet()
         return data
 
     def form_valid(self, form):
         context = self.get_context_data()
-        skills = context['skills_formset']
+        skills = context["skills_formset"]
         print(skills)
         with transaction.atomic():
             form.instance.user = self.request.user
@@ -76,6 +75,6 @@ class CreateProfileView(LoginRequiredMixin, CreateView):
         return super(CreateProfileView, self).form_valid(form)
 
 
-class ListProfileView(LoginRequiredMixin, DetailView):
+class DetailProfileView(LoginRequiredMixin, DetailView):
     model = Profile
-    
+    template_name = "accounts/profile_detail.html"

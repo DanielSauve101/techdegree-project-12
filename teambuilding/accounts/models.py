@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.conf import settings
 from django.db import models
+from django.urls import reverse
+from django.utils.text import slugify
 
 
 class UserManager(BaseUserManager):
@@ -50,12 +52,21 @@ class User(AbstractUser):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    slug = models.SlugField(allow_unicode=True, unique=True)
     name = models.CharField(max_length=60)
     description = models.TextField()
     profile_picture = models.ImageField(upload_to="profile_picture", default='frank_profile.jpg')
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        email = self.user.email.split("@", 1)
+        self.slug = slugify(email[0])
+        super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse("accounts:profile-detail", kwargs={"slug": self.slug})
 
 
 class Skill(models.Model):
