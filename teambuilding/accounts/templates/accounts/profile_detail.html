@@ -6,7 +6,7 @@
     <nav class="bounds">
       <ul class="circle--pill--list">
         <li><a href="applications.html">Applications</a></li>
-        <li><a class="selected" href="profile.html">Profile</a></li>
+        <li><a class="selected" href="{% url 'accounts:profile-detail' slug=profile.slug %}">Profile</a></li>
       </ul>
     </nav>
   </div>
@@ -17,7 +17,7 @@
         <h2>Profile</h2>
       </div>
       <div class="circle--fluid--cell circle--fluid--secondary">
-        <a class="button icon-on-left" href="profile_edit.html">Edit</a>
+        <a class="button icon-on-left" href="{% url 'accounts:profile-update' slug=profile.slug %}">Edit</a>
       </div>
     </div>
 
@@ -61,9 +61,7 @@
     <div class="grid-25 grid-push-5">
 
       <div class="circle--secondary--module">
-        <div class="circle--primary--avatar">
-
-        </div>
+          <img class="circle--primary--avatar" src="{{ profile.profile_picture.url }}">
       </div>
 
       <div class="circle--secondary--module">

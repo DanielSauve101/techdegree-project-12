@@ -49,7 +49,7 @@ class SkillForm(forms.ModelForm):
 SkillInlineFormSet = inlineformset_factory(
     Profile, 
     Skill,
-    extra=0,
+    extra=4,
     fields=('skills',),
     form=SkillForm,
     min_num=1

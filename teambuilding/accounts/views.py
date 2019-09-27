@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic.base import RedirectView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, FormView
+from django.views.generic.edit import CreateView, FormView, UpdateView
 
 from .forms import ProfileForm, SkillInlineFormSet, UserCreateForm
 from .models import Profile
@@ -78,3 +78,26 @@ class CreateProfileView(LoginRequiredMixin, CreateView):
 class DetailProfileView(LoginRequiredMixin, DetailView):
     model = Profile
     template_name = "accounts/profile_detail.html"
+
+
+class UpdateProfileView(LoginRequiredMixin, UpdateView):
+    form_class = ProfileForm
+    template_name = "accounts/profile_form.html"
+    model = Profile
+
+    def get_context_data(self, **kwargs):
+        data = super(UpdateProfileView, self).get_context_data(**kwargs)
+        if self.request.POST:
+            data["skills_formset"] = SkillInlineFormSet(self.request.POST, instance=self.object)
+        else:
+            data["skills_formset"] = SkillInlineFormSet(instance=self.object)
+        return data
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        skills = context["skills_formset"]
+        self.object = form.save()
+        if skills.is_valid():
+            skills.instance = self.object
+            skills.save()
+        return super(UpdateProfileView, self).form_valid(form)

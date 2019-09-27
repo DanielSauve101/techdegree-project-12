@@ -55,7 +55,7 @@ class Profile(models.Model):
     slug = models.SlugField(allow_unicode=True, unique=True)
     name = models.CharField(max_length=60)
     description = models.TextField()
-    profile_picture = models.ImageField(upload_to="profile_picture", default='frank_profile.jpg')
+    profile_picture = models.ImageField(upload_to="profile_picture", default='profile_picture/default_pic.jpg')
 
     def __str__(self):
         return self.name
