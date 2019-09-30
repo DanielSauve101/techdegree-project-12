@@ -14,7 +14,7 @@ from .models import Profile
 
 class SignUp(CreateView):
     form_class = UserCreateForm
-    success_url = reverse_lazy("accounts:profile-form")
+    success_url = reverse_lazy("accounts:profile-create")
     template_name = "accounts/signup.html"
 
     def form_valid(self, form):
@@ -65,7 +65,6 @@ class CreateProfileView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         context = self.get_context_data()
         skills = context["skills_formset"]
-        print(skills)
         with transaction.atomic():
             form.instance.user = self.request.user
             self.object = form.save()

@@ -6,7 +6,7 @@
     <nav class="bounds">
       <ul class="circle--pill--list">
         <li><a href="applications.html">Applications</a></li>
-        <li><a class="selected" href="profile.html">Profile</a></li>
+        <li><a class="selected" href="">Profile</a></li>
       </ul>
     </nav>
   </div>
@@ -86,14 +86,12 @@
         
           <h4>My Skills</h4>
           {{ skills_formset.management_form }}
-          <ul class="circle--clone--list">
           {% for skill in skills_formset%}
             {{ skill.id }}
-            <li>
-              {{ skill.skills }}
-            </li>
+            <ul class="circle--clone--list">
+             <li>{{ skill.skills }}</li>
+            </ul>
           {% endfor %}
-          </ul>
         </div>
 
         {% comment %} <div class="circle--secondary--module">
