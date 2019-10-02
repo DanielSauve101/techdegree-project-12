@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 from django.forms import inlineformset_factory
 
-from .models import Profile, Skill
+from .models import MyProject, Profile, Skill
 
 
 class UserCreateForm(UserCreationForm):
@@ -46,11 +46,32 @@ class SkillForm(forms.ModelForm):
             'skills'
         ]
 
+
+class MyProjectForm(forms.ModelForm):
+    class Meta:
+        model = MyProject
+        fields = [
+            'title',
+            'url'
+        ]
+        widgets = {
+            'title': forms.TextInput(attrs={'placeholder': 'Project Name'}),
+            'url': forms.URLInput(attrs={'placeholder': 'Project Url'})
+        }
+
 SkillInlineFormSet = inlineformset_factory(
     Profile, 
     Skill,
-    extra=4,
+    extra=2,
     fields=('skills',),
     form=SkillForm,
-    min_num=1
+    min_num=1,
     )
+
+MyProjectInlineFormSet = inlineformset_factory(
+    Profile,
+    MyProject,
+    extra=2,
+    fields=('title', 'url'),
+    form=MyProjectForm
+)

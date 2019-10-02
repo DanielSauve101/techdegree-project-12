@@ -4,6 +4,8 @@ from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
 
+from projects.models import Position
+
 
 class UserManager(BaseUserManager):
     """Defines a model manager for User model with no username field."""
@@ -51,11 +53,18 @@ class User(AbstractUser):
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        User, 
+        on_delete=models.CASCADE,
+        related_name="profile"
+        )
     slug = models.SlugField(allow_unicode=True, unique=True)
     name = models.CharField(max_length=60)
     description = models.TextField()
-    profile_picture = models.ImageField(upload_to="profile_picture", default='profile_picture/default_pic.jpg')
+    profile_picture = models.ImageField(
+        upload_to="profile_picture", 
+        default='profile_picture/default_pic.jpg'
+        )
 
     def __str__(self):
         return self.name
@@ -70,9 +79,28 @@ class Profile(models.Model):
 
 
 class Skill(models.Model):
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    skills = models.CharField(max_length=100)
+    profile = models.ForeignKey(
+        Profile, 
+        on_delete=models.CASCADE,
+        related_name="skill"
+        )
+    skills = models.CharField(
+        max_length=3,
+        choices=Position.POSITION_CHOICES
+        )
 
     def __str__(self):
-        return self.skills
+        return self.get_skills_display()
 
+
+class MyProject(models.Model):
+    profile = models.ForeignKey(
+        Profile, 
+        on_delete=models.CASCADE,
+        related_name="myproject"
+        )
+    title = models.CharField(max_length=60, blank=True)
+    url = models.URLField(blank=True)
+
+    def __str__(self):
+        return self.title

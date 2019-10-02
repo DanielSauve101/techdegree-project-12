@@ -8,7 +8,7 @@ from django.views.generic.base import RedirectView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, FormView, UpdateView
 
-from .forms import ProfileForm, SkillInlineFormSet, UserCreateForm
+from .forms import MyProjectInlineFormSet, ProfileForm, SkillInlineFormSet, UserCreateForm
 from .models import Profile
 
 
@@ -58,19 +58,24 @@ class CreateProfileView(LoginRequiredMixin, CreateView):
         data = super(CreateProfileView, self).get_context_data(**kwargs)
         if self.request.POST:
             data["skills_formset"] = SkillInlineFormSet(self.request.POST)
+            data["my_project_formset"] = MyProjectInlineFormSet(self.request.POST)
         else:
             data["skills_formset"] = SkillInlineFormSet()
+            data["my_project_formset"] = MyProjectInlineFormSet()
         return data
 
     def form_valid(self, form):
         context = self.get_context_data()
         skills = context["skills_formset"]
+        my_projects = context["my_project_formset"]
         with transaction.atomic():
             form.instance.user = self.request.user
             self.object = form.save()
-        if skills.is_valid():
+        if skills.is_valid() and my_projects.is_valid():
             skills.instance = self.object
             skills.save()
+            my_projects.instance = self.object
+            my_projects.save()
         return super(CreateProfileView, self).form_valid(form)
 
 
@@ -88,15 +93,20 @@ class UpdateProfileView(LoginRequiredMixin, UpdateView):
         data = super(UpdateProfileView, self).get_context_data(**kwargs)
         if self.request.POST:
             data["skills_formset"] = SkillInlineFormSet(self.request.POST, instance=self.object)
+            data["my_project_formset"] = MyProjectInlineFormSet(self.request.POST, instance=self.object)
         else:
             data["skills_formset"] = SkillInlineFormSet(instance=self.object)
+            data["my_project_formset"] = MyProjectInlineFormSet(instance=self.object)
         return data
 
     def form_valid(self, form):
         context = self.get_context_data()
         skills = context["skills_formset"]
+        my_projects = context["my_project_formset"]
         self.object = form.save()
-        if skills.is_valid():
+        if skills.is_valid() and my_projects.is_valid():
             skills.instance = self.object
             skills.save()
+            my_projects.instance = self.object
+            my_projects.save()
         return super(UpdateProfileView, self).form_valid(form)

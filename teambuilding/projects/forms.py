@@ -22,6 +22,12 @@ class PositionForm(forms.ModelForm):
             'title',
             'description',
         ]
+        widgets = {
+            'description': forms.Textarea(attrs={
+                'placeholder': 'Position Description', 
+                'rows': 5
+                })
+        }
         
 
 PositionInlineFormSet = inlineformset_factory(

@@ -38,22 +38,20 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="clickable-row" data-href="project.html">
-            <td>
-              <h3>Invoice Delivery Tool</h3>
-            </td>
-            <td class="circle--cell--right">
-              <span class="secondary-label">Rails Developer</span>
-            </td>
-          </tr>
-          <tr class="clickable-row" data-href="project.html">
-            <td>
-              <h3>Twitter Client</h3>
-            </td>
-            <td class="circle--cell--right">
-              <span class="secondary-label">Designer</span>
-            </td>
-          </tr>
+          {% if user.project %}
+            {% for project in user.project.all %}
+              <tr class="clickable-row" data-href="{% url 'projects:project-detail' slug=project.slug %}">
+                <td>
+                  <h3>{{ project.title }}</h3>
+                </td>
+                <td class="circle--cell--right">
+                  {% for needs in project.position.all %}
+                    <span class="secondary-label">{{ needs }}</span>
+                  {% endfor %}
+                </td>
+              </tr>
+            {% endfor %}
+          {% endif %}
         </tbody>
       </table>
     </div>
@@ -67,7 +65,7 @@
       <div class="circle--secondary--module">
         <h4>My Skills</h4>
         <ul class="unloaded">
-        {% for skill in profile.skill_set.all %}
+        {% for skill in profile.skill.all %}
           <li>{{ skill }}</li>
         {% endfor %}
         </ul>
@@ -76,10 +74,9 @@
       <div class="circle--secondary--module">
         <h4>My Projects</h4>
         <ul class="circle--link--list">
-          <li><a>Project 1</a></li>
-          <li><a>Project 2</a></li>
-          <li><a>Project 3</a></li>
-          <li><a>Project 4</a></li>
+        {% for my_project in profile.myproject.all %}
+          <li><a href={{my_project.url}} target="_blank">{{ my_project.title }}</a></li>
+        {% endfor %}
         </ul>
       </div>
     </div>

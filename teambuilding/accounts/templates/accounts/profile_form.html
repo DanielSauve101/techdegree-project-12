@@ -42,7 +42,7 @@
           <textarea name="description" placeholder="Tell us about yourself..."></textarea>
         </div>
 
-        {% comment %} <h2>Past Projects</h2>
+        <h2>Past Projects</h2>
         <table class="u-full-width circle--table">
           <thead>
             <tr>
@@ -51,24 +51,22 @@
             </tr>
           </thead>
           <tbody>
-            <tr class="clickable-row" data-href="project.html">
-              <td>
-                <h3>Invoice Delivery Tool</h3>
-              </td>
-              <td class="circle--cell--right">
-                <span class="secondary-label">Rails Developer</span>
-              </td>
-            </tr>
-            <tr class="clickable-row" data-href="project.html">
-              <td>
-                <h3>Twitter Client</h3>
-              </td>
-              <td class="circle--cell--right">
-                <span class="secondary-label">Designer</span>
-              </td>
-            </tr>
+            {% if user.project %}
+              {% for project in user.project.all %}
+                <tr class="clickable-row" data-href="{% url 'projects:project-detail' slug=project.slug %}">
+                  <td>
+                    <h3>{{ project.title }}</h3>
+                  </td>
+                  <td class="circle--cell--right">
+                    {% for needs in project.position.all %}
+                      <span class="secondary-label">{{ needs }}</span>
+                    {% endfor %}
+                  </td>
+                </tr>
+              {% endfor %}
+            {% endif %}
           </tbody>
-        </table> {% endcomment %}
+        </table>
       </div>
 
       <div class="grid-25 grid-push-5">
@@ -86,26 +84,27 @@
         
           <h4>My Skills</h4>
           {{ skills_formset.management_form }}
-          {% for skill in skills_formset%}
-            {{ skill.id }}
+          <ul class="circle--clone--list">
+            {% for skill in skills_formset%}
+              {{ skill.id }}
+              <li>{{ skill }}</li>
+            {% endfor %}
+          </ul>
+          
+        </div>
+
+        <div class="circle--secondary--module">
+          <h4>My Projects</h4>
+          {{ my_project_formset.management_form }}
+          {% for my_project in my_project_formset%}
+            {{ my_project.id }}
             <ul class="circle--clone--list">
-             <li>{{ skill.skills }}</li>
+             <li>{{ my_project.title }}</li>
+             <li>{{ my_project.url }}</li>
             </ul>
           {% endfor %}
         </div>
-
-        {% comment %} <div class="circle--secondary--module">
-          <h4>My Projects</h4>
-          <ul class="circle--clone--list">
-            <li>
-              <input type="text" placeholder="Project Name" />
-              <input type="text" placeholder="Project URL" />
-              <a class="circle--clone--add">Add Project</a>
-              <a class="circle--clone--remove">Remove</a>
-            </li>
-          </ul>
-        </div> {% endcomment %}
-      {% comment %} </div> {% endcomment %}
+      </div>
     </form>
   </div>
 

@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.utils.translation import ugettext_lazy as _
 
-from .models import Profile, Skill, User
+from .models import MyProject, Profile, Skill, User
 
 #Credit to the following website for instruction on setting up the admin with the user.email.
 #https://www.fomfus.com/articles/how-to-use-email-as-username-for-django-authentication-removing-the-username
@@ -31,3 +31,4 @@ class UserAdmin(DjangoUserAdmin):
 
 admin.site.register(Profile)
 admin.site.register(Skill)
+admin.site.register(MyProject)
