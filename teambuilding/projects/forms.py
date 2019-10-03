@@ -13,6 +13,26 @@ class ProjectForm(forms.ModelForm):
             'timeline',
             'applicant_requirements'
         ]
+        widgets = {
+            'title': forms.TextInput(attrs={
+                'placeholder': 'Project title',
+                'class': 'circle--input--h1'
+                }),
+            'description': forms.Textarea(attrs={
+                'placeholder': 'Project Description',
+                'rows': 5
+            }),
+            'timeline': forms.Textarea(attrs={
+                'placeholder': 'Time Estimate',
+                'class': 'circle--textarea--input',
+                'rows': 5
+            }),
+            'applicant_requirements': forms.Textarea(attrs={
+                'placeholder': 'Any additional requirements',
+                'class': 'circle--textarea--input',
+                'rows': 5
+            })
+        }
         
 
 class PositionForm(forms.ModelForm):

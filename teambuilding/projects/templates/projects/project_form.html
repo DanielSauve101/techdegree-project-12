@@ -15,8 +15,8 @@
     {% csrf_token %}
       <div class="grid-70">
         <div class="circle--article--body">
-          <input type="text" name="title" class="circle--input--h1" placeholder="Project Title" />
-          <textarea name="description" placeholder="Project description..."></textarea>
+          {{ form.title }}
+          {{ form.description }}
         </div>
 
         <div class="circle--project--positions">
@@ -42,12 +42,12 @@
 
         <div class="circle--secondary--module">
           <h3>Project Timeline</h3>
-          <textarea name="timeline" placeholder="Time estimate" class="circle--textarea--input"></textarea>
+          {{ form.timeline }}
         </div>
 
         <div class="circle--secondary--module">
           <h3>Applicant Requirements</h3>
-          <textarea name="applicant_requirements"></textarea>
+          {{ form.applicant_requirements }}
         </div>
 
       </div>

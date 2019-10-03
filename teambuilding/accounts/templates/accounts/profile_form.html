@@ -6,7 +6,9 @@
     <nav class="bounds">
       <ul class="circle--pill--list">
         <li><a href="applications.html">Applications</a></li>
-        <li><a class="selected" href="">Profile</a></li>
+        {% if user.profile %}
+          <li><a class="selected" href="{% url 'accounts:profile-detail' slug=profile.slug %}">Profile</a></li>
+        {% endif %}
       </ul>
     </nav>
   </div>
@@ -15,18 +17,6 @@
   <div class="bounds circle--page">
     <form enctype="multipart/form-data" method="POST">
     {% csrf_token %}
-    {% if form.name.errors %}
-      <p>This is name {{ form.name.errors }}</p>
-    {% endif %}
-    {% if form.description.errors %}
-      <p>This is description {{ form.description.errors }}</p>
-    {% endif %}
-    {% if form.skills.errors %}
-      <p>This is skills {{ form.skils.errors }} </p>
-    {% endif %}
-    {% if form.profile_picture.errors %}
-     <p>This is pic {{ form.profile_picture.errors }} </p>
-    {% endif %}
       <div class="circle--page--header circle--fluid">
         <div class="circle--fluid--cell circle--fluid--primary">
           <h2>Profile</h2>
@@ -37,9 +27,9 @@
       </div>
 
       <div class="grid-70">
-        <input type="text" name="name" placeholder="Full Name" class="circle--input--h1">
+        {{ form.name }}
         <div class="circle--article--body">
-          <textarea name="description" placeholder="Tell us about yourself..."></textarea>
+          {{ form.description }}
         </div>
 
         <h2>Past Projects</h2>

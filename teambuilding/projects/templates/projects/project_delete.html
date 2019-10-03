@@ -1,0 +1,11 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="bounds circle--page circle--article">
+  <form method="post">
+    {% csrf_token %}
+    <p>Are you sure you want to delete "{{ object }}"?</p>
+    <input type="submit" class="button button-primary" value="Confirm">
+  </form>
+</div>
+{% endblock %}

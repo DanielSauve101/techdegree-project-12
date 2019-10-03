@@ -14,7 +14,7 @@ class Project(models.Model):
         )
     description = models.TextField()
     timeline = models.TextField()
-    applicant_requirements = models.TextField()
+    applicant_requirements = models.TextField(blank=True)
 
     def __str__(self):
         return self.title
@@ -59,7 +59,7 @@ class Position(models.Model):
         max_length=3,
         choices=POSITION_CHOICES,
         )
-    description = models.TextField()
+    description = models.TextField(blank=True)
     position_filled = models.BooleanField(default=False)
 
     def __str__(self):

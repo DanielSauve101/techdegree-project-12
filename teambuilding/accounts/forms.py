@@ -37,6 +37,16 @@ class ProfileForm(forms.ModelForm):
             'description',
             'profile_picture'
         ]
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'placeholder': 'Full Name',
+                'class': 'circle--input--h1'
+                }),
+            'description': forms.Textarea(attrs={
+                'placeholder': 'Tell us about yourself...',
+                'rows': 5
+                })
+        }
 
 
 class SkillForm(forms.ModelForm):
