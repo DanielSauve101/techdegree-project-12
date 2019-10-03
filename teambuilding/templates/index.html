@@ -18,17 +18,21 @@
     <div class="grid-25">
       <div class="circle--filter circle--secondary--module">
         <h4>Project Needs</h4>
-        <ul class="circle--filter--list">
-          <li><a class="selected">All Needs</a></li>
-          <li><a>Android Developer</a></li>
-          <li><a>Designer</a></li>
-          <li><a>Java Developer</a></li>
-          <li><a>PHP Developer</a></li>
-          <li><a>Python Developer</a></li>
-          <li><a>Rails Developer</a></li>
-          <li><a>WordPress Developer</a></li>
-          <li><a>iOS Developer</a></li>
-        </ul>
+        <form method="GET">
+          <select name="filter">
+            <option>All Needs</option>
+            <option>Android Developer</option>
+            <option>Designer</option>
+            <option>IOS Developer</option>
+            <option>Java Developer</option>
+            <option>Other</option>
+            <option>PHP Developer</option>
+            <option>Python Developer</option>
+            <option>Rails Developer</option>
+            <option>WordPress Developer</option>
+          </select>
+          <p><input type="submit" name="submit" value="submit"/></p>
+        </form>
       </div>
     </div>
 
@@ -41,22 +45,20 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="clickable-row" data-href="project.html">
-            <td>
-              <h3>Invoice Delivery Tool</h3>
-            </td>
-            <td class="circle--cell--right">
-              <span class="secondary-label">Rails Developer</span>
-            </td>
-          </tr>
-          <tr class="clickable-row" data-href="project.html">
-            <td>
-              <h3>Twitter Client</h3>
-            </td>
-            <td class="circle--cell--right">
-              <span class="secondary-label">Designer</span>
-            </td>
-          </tr>
+        {% if object_list %}
+          {% for project in object_list %}
+            <tr class="clickable-row" data-href="{% url 'projects:project-detail' slug=project.slug %}">
+              <td>
+                <h3>{{ project }}</h3>
+              </td>
+              <td class="circle--cell--right">
+              {% for needs in project.position.all %}
+                <span class="secondary-label">{{ needs }}</span>
+              {% endfor %}
+              </td>
+            </tr>
+          {% endfor %}
+        {% endif %}
         </tbody>
       </table>
     </div>

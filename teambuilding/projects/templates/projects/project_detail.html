@@ -15,11 +15,11 @@
       <div class="circle--article--header">
         <h4 class="circle--article--section">Project</h4>
         <h1 class="circle--article--title">{{ project.title }}</h1>
-        <p class="circle--article--byline">Project Owner: {{ user.profile.name }} </p>
+        <p class="circle--article--byline">Project Owner: {{ project.project_owner.profile.name }} </p>
       </div>
 
       <div class="circle--article--body">
-        <p>{{ project.description }}</p>
+        <p>{{ project.description|linebreaks }}</p>
       </div>
 
       <div class="circle--project--positions">
@@ -29,7 +29,7 @@
         {% for position in project.position.all %}
           <li>
             <h3>{{ position }}</h3>
-            <p>{{ position.description }}</p>
+            <p>{{ position.description|linebreaks }}</p>
             {% if position.filled %}
               <a class="button button-primary button-inactive">Position Filled</a>
             {% else %}
