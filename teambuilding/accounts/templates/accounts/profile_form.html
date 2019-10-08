@@ -5,7 +5,7 @@
   <div class="circle--actions--bar">
     <nav class="bounds">
       <ul class="circle--pill--list">
-        <li><a href="{% url 'applications:applications-list' %}">Applications</a></li>
+        <li><a href="{% url 'projects:applications-list' %}">Applications</a></li>
         {% if user.profile %}
           <li><a class="selected" href="{% url 'accounts:profile-detail' slug=profile.slug %}">Profile</a></li>
         {% endif %}

@@ -15,6 +15,7 @@ class Project(models.Model):
     description = models.TextField()
     timeline = models.TextField()
     applicant_requirements = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title
@@ -25,6 +26,9 @@ class Project(models.Model):
 
     def get_absolute_url(self):
         return reverse("projects:project-detail", kwargs={"slug": self.slug})
+
+    class Meta:
+        ordering = ['-created_at']
     
 
 class Position(models.Model):
@@ -65,4 +69,39 @@ class Position(models.Model):
     def __str__(self):
         return self.get_title_display()
 
+
+class Applicant(models.Model):
+    NEW = 'NEW'
+    ACCEPTED = 'ACC'
+    REJECTED = 'REJ'
+    
+    APPLICANT_CHOICES = [
+    (NEW, 'New Applicants'),
+    (ACCEPTED, 'Accepted'),
+    (REJECTED, 'Rejected'),
+    ]
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="applicant"
+    )
+    project = models.ForeignKey(
+        Project,
+        on_delete=models.CASCADE,
+        related_name="applicant_project"
+    )
+    position = models.ForeignKey(
+        Position,
+        on_delete=models.CASCADE,
+        related_name="applicant_position"
+    )
+    status = models.CharField(
+        max_length=3,
+        choices=APPLICANT_CHOICES,
+        default=NEW
+    )
+
+    def __str__(self):
+        return "{} for {} project".format(self.user.profile.name, self.project)
 

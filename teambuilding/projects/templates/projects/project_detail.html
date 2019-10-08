@@ -32,10 +32,16 @@
           <li>
             <h3>{{ position }}</h3>
             <p>{{ position.description|linebreaks }}</p>
-            {% if position.filled %}
-              <a class="button button-primary button-inactive">Position Filled</a>
-            {% else %}
-              <a class="button button-primary">Apply</a>
+            {% if user != project.project_owner %}
+              {% if position.filled %}
+                <a class="button button-primary button-inactive">Position Filled</a>
+              {% else %}
+                {% if position.applicant_position.all %}
+                 <button>Applied</button>
+                {% else %}
+                  <a href="{% url 'projects:applicant-create' slug=project.slug pk=position.pk %}"class="button button-primary">Apply</a>
+                {% endif %}
+              {% endif %}
             {% endif %}
           </li>
         {% endfor %}

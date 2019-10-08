@@ -4,9 +4,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic.list import ListView
 
 from .forms import ProjectForm, PositionInlineFormSet
-from .models import Project, Position
+from .models import Applicant, Project, Position
 
 
 class CreateProjectView(LoginRequiredMixin, CreateView):
@@ -15,12 +16,12 @@ class CreateProjectView(LoginRequiredMixin, CreateView):
     model = Project
 
     def get_context_data(self, **kwargs):
-        data = super(CreateProjectView, self).get_context_data(**kwargs)
+        context = super(CreateProjectView, self).get_context_data(**kwargs)
         if self.request.POST:
-            data["positions_formset"] = PositionInlineFormSet(self.request.POST)
+            context["positions_formset"] = PositionInlineFormSet(self.request.POST)
         else:
-            data["positions_formset"] = PositionInlineFormSet()
-        return data
+            context["positions_formset"] = PositionInlineFormSet()
+        return context
 
     def form_valid(self, form):
         context = self.get_context_data()
@@ -49,12 +50,12 @@ class UpdateProjectView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return obj.project_owner == self.request.user
 
     def get_context_data(self, **kwargs):
-        data = super(UpdateProjectView, self).get_context_data(**kwargs)
+        context = super(UpdateProjectView, self).get_context_data(**kwargs)
         if self.request.POST:
-            data["positions_formset"] = PositionInlineFormSet(self.request.POST, instance=self.object)
+            context["positions_formset"] = PositionInlineFormSet(self.request.POST, instance=self.object)
         else:
-            data["positions_formset"] = PositionInlineFormSet(instance=self.object)
-        return data
+            context["positions_formset"] = PositionInlineFormSet(instance=self.object)
+        return context
 
     def form_valid(self, form):
         context = self.get_context_data()
@@ -74,3 +75,28 @@ class DeleteProjectView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         obj = self.get_object()
         return obj.project_owner == self.request.user
+
+
+class ListApplicationsView(LoginRequiredMixin, ListView):
+    model = Applicant
+    template_name = "projects/applications.html"
+
+
+class CreateApplicantView(LoginRequiredMixin, CreateView):
+    model = Applicant
+    template_name = "projects/applicant_form.html"
+    success_url = reverse_lazy("home")
+    fields = ['status']
+
+    def get_context_data(self, **kwargs):
+        context = super(CreateApplicantView, self).get_context_data(**kwargs)
+        context['project'] = Project.objects.get(slug=self.kwargs.get('slug'))
+        context['position'] = Position.objects.get(pk=self.kwargs.get('pk'))
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        form.instance.user = self.request.user
+        form.instance.project = context['project']
+        form.instance.position = context['position']
+        return super(CreateApplicantView, self).form_valid(form)

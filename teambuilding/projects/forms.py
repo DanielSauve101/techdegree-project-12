@@ -48,7 +48,7 @@ class PositionForm(forms.ModelForm):
                 'rows': 5
                 })
         }
-        
+
 
 PositionInlineFormSet = inlineformset_factory(
     Project,
