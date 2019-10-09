@@ -64,7 +64,6 @@ class Position(models.Model):
         choices=POSITION_CHOICES,
         )
     description = models.TextField(blank=True)
-    position_filled = models.BooleanField(default=False)
 
     def __str__(self):
         return self.get_title_display()
