@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="bounds circle--page circle--article">
+  <h1>Project: {{ applicant.project.title }}</h1>
+  <h2>Position: {{ applicant.position }}</h2>
+  <h2>{{ applicant.position.position_filled }}</h2>
+  <p>Please select if you would like to accept or reject this applicant.</p>
+  <div class="grid-20">
+    <form action="" method="POST">
+    {% csrf_token %}
+      {{ form.status }}
+      <input class="button-primary" type="submit" value="Save">
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -57,28 +57,28 @@
         <thead>
           <tr>
             <th>Applicant</th>
-            <th class="circle--cell--right">Applicant Position</th>
+            <th>Applicant Position</th>
+            <th>Applicant Status</th>
           </tr>
         </thead>
         <tbody>
-          <tr class="clickable-row" data-href="profile.html">
-            <td>
-              <h3>Jim Horton</h3>
-              <p>Currency Calculator</p>
-            </td>
-            <td class="circle--cell--right">
-              <span class="secondary-label">Rails Developer</span>
-            </td>
-          </tr>
-          <tr class="clickable-row" data-href="profile.html">
-            <td>
-              <h3>Jenny McMann</h3>
-              <p>Currency Calculator</p>
-            </td>
-            <td class="circle--cell--right">
-              <span class="secondary-label">Designer</span>
-            </td>
-          </tr>
+        {% for applicant in object_list %}
+          {% if applicant.project.project_owner == user %}
+            <tr>
+              <td>
+                <h3><a href="{% url 'accounts:profile-detail' slug=applicant.user.profile.slug %}" target="_blank">{{ applicant.user.profile.name }}</a></h3>
+                <p>{{ applicant.project }}</p>
+              </td>
+              <td>
+                <span class="secondary-label">{{ applicant.position }}</span>
+              </td>
+              <td>
+                <span class="secondary-label">{{ applicant.get_status_display }}</span><br><br>
+                <a href="{% url 'projects:applicant-update' pk=applicant.pk %}">Edit</a>
+              </td>
+            </tr>
+          {% endif %}
+        {% endfor %}
         </tbody>
       </table>
 

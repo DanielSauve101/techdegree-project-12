@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
@@ -55,14 +55,14 @@ class CreateProfileView(LoginRequiredMixin, CreateView):
     model = Profile
 
     def get_context_data(self, **kwargs):
-        data = super(CreateProfileView, self).get_context_data(**kwargs)
+        context = super(CreateProfileView, self).get_context_data(**kwargs)
         if self.request.POST:
-            data["skills_formset"] = SkillInlineFormSet(self.request.POST)
-            data["my_project_formset"] = MyProjectInlineFormSet(self.request.POST)
+            context["skills_formset"] = SkillInlineFormSet(self.request.POST)
+            context["my_project_formset"] = MyProjectInlineFormSet(self.request.POST)
         else:
-            data["skills_formset"] = SkillInlineFormSet()
-            data["my_project_formset"] = MyProjectInlineFormSet()
-        return data
+            context["skills_formset"] = SkillInlineFormSet()
+            context["my_project_formset"] = MyProjectInlineFormSet()
+        return context
 
     def form_valid(self, form):
         context = self.get_context_data()
@@ -84,20 +84,24 @@ class DetailProfileView(LoginRequiredMixin, DetailView):
     template_name = "accounts/profile_detail.html"
 
 
-class UpdateProfileView(LoginRequiredMixin, UpdateView):
+class UpdateProfileView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     form_class = ProfileForm
     template_name = "accounts/profile_form.html"
     model = Profile
 
+    def test_func(self):
+        obj = self.get_object()
+        return obj.user == self.request.user
+
     def get_context_data(self, **kwargs):
-        data = super(UpdateProfileView, self).get_context_data(**kwargs)
+        context = super(UpdateProfileView, self).get_context_data(**kwargs)
         if self.request.POST:
-            data["skills_formset"] = SkillInlineFormSet(self.request.POST, instance=self.object)
-            data["my_project_formset"] = MyProjectInlineFormSet(self.request.POST, instance=self.object)
+            context["skills_formset"] = SkillInlineFormSet(self.request.POST, instance=self.object)
+            context["my_project_formset"] = MyProjectInlineFormSet(self.request.POST, instance=self.object)
         else:
-            data["skills_formset"] = SkillInlineFormSet(instance=self.object)
-            data["my_project_formset"] = MyProjectInlineFormSet(instance=self.object)
-        return data
+            context["skills_formset"] = SkillInlineFormSet(instance=self.object)
+            context["my_project_formset"] = MyProjectInlineFormSet(instance=self.object)
+        return context
 
     def form_valid(self, form):
         context = self.get_context_data()

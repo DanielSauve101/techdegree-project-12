@@ -100,3 +100,10 @@ class CreateApplicantView(LoginRequiredMixin, CreateView):
         form.instance.project = context['project']
         form.instance.position = context['position']
         return super(CreateApplicantView, self).form_valid(form)
+
+
+class UpdateApplicantView(LoginRequiredMixin, UpdateView):
+    model = Applicant
+    template_name = "projects/applicant_edit_form.html"
+    success_url = reverse_lazy("projects:applications-list")
+    fields = ['status']

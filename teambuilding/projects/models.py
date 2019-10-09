@@ -76,7 +76,7 @@ class Applicant(models.Model):
     REJECTED = 'REJ'
     
     APPLICANT_CHOICES = [
-    (NEW, 'New Applicants'),
+    (NEW, 'New Applicant'),
     (ACCEPTED, 'Accepted'),
     (REJECTED, 'Rejected'),
     ]
@@ -104,4 +104,3 @@ class Applicant(models.Model):
 
     def __str__(self):
         return "{} for {} project".format(self.user.profile.name, self.project)
-
