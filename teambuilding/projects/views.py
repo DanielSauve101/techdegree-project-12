@@ -81,6 +81,22 @@ class ListApplicationsView(LoginRequiredMixin, ListView):
     model = Applicant
     template_name = "projects/applications.html"
 
+    def get_queryset(self):
+        filter_value = self.request.GET.get('filter', 'All Applications')
+        if filter_value == 'All Applications':
+            queryset = Applicant.objects.all()
+        else:
+            queryset = Applicant.objects.filter(
+                status__icontains=filter_value[0:3]
+            )
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super(ListApplicationsView, self).get_context_data(**kwargs)
+        context['filter'] = self.request.GET.get('filter')
+        return context
+
+
 
 class CreateApplicantView(LoginRequiredMixin, CreateView):
     model = Applicant
@@ -102,8 +118,12 @@ class CreateApplicantView(LoginRequiredMixin, CreateView):
         return super(CreateApplicantView, self).form_valid(form)
 
 
-class UpdateApplicantView(LoginRequiredMixin, UpdateView):
+class UpdateApplicantView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Applicant
     template_name = "projects/applicant_edit_form.html"
     success_url = reverse_lazy("projects:applications-list")
     fields = ['status']
+
+    def test_func(self):
+        obj = self.get_object()
+        return obj.project.project_owner == self.request.user
