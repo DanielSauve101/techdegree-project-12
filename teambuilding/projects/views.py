@@ -1,6 +1,7 @@
 from django.db import transaction
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.core.mail import send_mail
 from django.urls import reverse_lazy
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
@@ -127,3 +128,21 @@ class UpdateApplicantView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def test_func(self):
         obj = self.get_object()
         return obj.project.project_owner == self.request.user
+
+    def form_valid(self, form):
+        position = self.object.position
+        status = form.cleaned_data.get('status')
+
+        if status == 'ACC':
+            status = 'Congradulations! You have been accepted for the {} position.'.format(position)
+        else:
+            status = 'We regret to inform you that you have been rejected for the {} position.'.format(position)
+
+        send_mail(
+            self.object.project,
+            status,
+            self.request.user.email,
+            [self.object.user.email],
+            fail_silently=False,
+            )
+        return super(UpdateApplicantView, self).form_valid(form)

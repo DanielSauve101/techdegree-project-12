@@ -9,7 +9,10 @@
   <div class="grid-20">
     <form action="" method="POST">
     {% csrf_token %}
-      {{ form.status }}
+      <select id="status" name="status">
+        <option value="ACC">Accepted</option>
+        <option value="REJ">Rejected</option>
+      </select>
       <input class="button-primary" type="submit" value="Save">
     </form>
   </div>
