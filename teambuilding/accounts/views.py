@@ -8,7 +8,8 @@ from django.views.generic.base import RedirectView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, FormView, UpdateView
 
-from .forms import MyProjectInlineFormSet, ProfileForm, SkillInlineFormSet, UserCreateForm
+from .forms import (MyProjectInlineFormSet, ProfileForm, 
+                    SkillInlineFormSet, UserCreateForm)
 from .models import Profile
 
 
@@ -58,7 +59,9 @@ class CreateProfileView(LoginRequiredMixin, CreateView):
         context = super(CreateProfileView, self).get_context_data(**kwargs)
         if self.request.POST:
             context["skills_formset"] = SkillInlineFormSet(self.request.POST)
-            context["my_project_formset"] = MyProjectInlineFormSet(self.request.POST)
+            context["my_project_formset"] = MyProjectInlineFormSet(
+                self.request.POST
+                )
         else:
             context["skills_formset"] = SkillInlineFormSet()
             context["my_project_formset"] = MyProjectInlineFormSet()
@@ -96,11 +99,19 @@ class UpdateProfileView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super(UpdateProfileView, self).get_context_data(**kwargs)
         if self.request.POST:
-            context["skills_formset"] = SkillInlineFormSet(self.request.POST, instance=self.object)
-            context["my_project_formset"] = MyProjectInlineFormSet(self.request.POST, instance=self.object)
+            context["skills_formset"] = SkillInlineFormSet(
+                self.request.POST, instance=self.object
+                )
+            context["my_project_formset"] = MyProjectInlineFormSet(
+                self.request.POST, instance=self.object
+                )
         else:
-            context["skills_formset"] = SkillInlineFormSet(instance=self.object)
-            context["my_project_formset"] = MyProjectInlineFormSet(instance=self.object)
+            context["skills_formset"] = SkillInlineFormSet(
+                instance=self.object
+                )
+            context["my_project_formset"] = MyProjectInlineFormSet(
+                instance=self.object
+                )
         return context
 
     def form_valid(self, form):

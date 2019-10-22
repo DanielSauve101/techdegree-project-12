@@ -1,5 +1,4 @@
 from django.db import transaction
-from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.mail import send_mail
 from django.urls import reverse_lazy
@@ -19,7 +18,9 @@ class CreateProjectView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super(CreateProjectView, self).get_context_data(**kwargs)
         if self.request.POST:
-            context["positions_formset"] = PositionInlineFormSet(self.request.POST)
+            context["positions_formset"] = PositionInlineFormSet(
+                self.request.POST
+                )
         else:
             context["positions_formset"] = PositionInlineFormSet()
         return context
@@ -53,9 +54,13 @@ class UpdateProjectView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super(UpdateProjectView, self).get_context_data(**kwargs)
         if self.request.POST:
-            context["positions_formset"] = PositionInlineFormSet(self.request.POST, instance=self.object)
+            context["positions_formset"] = PositionInlineFormSet(
+                self.request.POST, instance=self.object
+                )
         else:
-            context["positions_formset"] = PositionInlineFormSet(instance=self.object)
+            context["positions_formset"] = PositionInlineFormSet(
+                instance=self.object
+                )
         return context
 
     def form_valid(self, form):
