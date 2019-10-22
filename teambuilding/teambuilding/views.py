@@ -34,3 +34,8 @@ class Search(ListView):
             Q(title__icontains=query) | Q(description__icontains=query)
         )
         return project_list
+
+    def get_context_data(self, **kwargs):
+        context = super(Search, self).get_context_data(**kwargs)
+        context['q'] = self.request.GET.get('q')
+        return context
