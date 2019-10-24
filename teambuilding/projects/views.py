@@ -140,8 +140,12 @@ class UpdateApplicantView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
         if status == 'ACC':
             status = 'Congradulations! You have been accepted for the {} position.'.format(position)
+            position.position_filled = True
+            position.save()
         else:
             status = 'We regret to inform you that you have been rejected for the {} position.'.format(position)
+            position.position_filled = False
+            position.save()
 
         send_mail(
             self.object.project,

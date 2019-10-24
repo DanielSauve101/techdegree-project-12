@@ -14,7 +14,8 @@ class Home(ListView):
             context = Project.objects.all()
         else:
             context = Project.objects.filter(
-                position__title__icontains=filter_value[0:3]
+                Q(position__position_filled=False) 
+                & Q(position__title__icontains=filter_value[0:3])
             )
         return context
 
